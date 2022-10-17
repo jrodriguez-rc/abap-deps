@@ -94,11 +94,11 @@ CLASS cl_gui_alv_grid DEFINITION PUBLIC.
 
     CONSTANTS:
       mc_style_disabled TYPE i VALUE 1,
-      mc_style_enabled TYPE i VALUE 2,
-      mc_evt_modified TYPE i VALUE 3,
-      mc_style_hotspot TYPE i VALUE 4,
-      mc_evt_enter TYPE i VALUE 5,
-      mc_style_button TYPE i VALUE 6.
+      mc_style_enabled  TYPE i VALUE 2,
+      mc_evt_modified   TYPE i VALUE 3,
+      mc_style_hotspot  TYPE i VALUE 4,
+      mc_evt_enter      TYPE i VALUE 5,
+      mc_style_button   TYPE i VALUE 6.
 
     CONSTANTS:
       mc_mb_variant      TYPE string VALUE 'a',
@@ -171,6 +171,20 @@ CLASS cl_gui_alv_grid DEFINITION PUBLIC.
       mc_fc_print_back TYPE string VALUE '1',
       mc_fc_reprep TYPE string VALUE '1',
       mc_fc_save_variant TYPE string VALUE '1',
+      mc_fc_back_classic TYPE string VALUE '1',
+      mc_fc_call_chain TYPE string VALUE '1',
+      mc_fc_call_crbatch TYPE string VALUE '1',
+      mc_fc_call_lineitems TYPE string VALUE '1',
+      mc_fc_call_master_data TYPE string VALUE '1',
+      mc_fc_call_more TYPE string VALUE '1',
+      mc_fc_call_xint TYPE string VALUE '1',
+      mc_fc_call_xxl TYPE string VALUE '1',
+      mc_fc_count TYPE string VALUE '1',
+      mc_fc_current_variant TYPE string VALUE '1',
+      mc_fc_data_save TYPE string VALUE '1',
+      mc_fc_expcrdesig TYPE string VALUE '1',
+      mc_fc_expmdb TYPE string VALUE '1',
+      mc_fc_f4 TYPE string VALUE '1',
       mc_fc_loc_delete_row TYPE string VALUE 'x'.
 
     CLASS-METHODS offline RETURNING VALUE(off) TYPE i.
@@ -181,7 +195,8 @@ CLASS cl_gui_alv_grid DEFINITION PUBLIC.
           i_parent TYPE any OPTIONAL
           i_applogparent TYPE any OPTIONAL
           i_appl_events TYPE any OPTIONAL,
-      register_edit_event,
+      register_edit_event
+        IMPORTING i_event_id TYPE i,
       set_toolbar_interactive,
       is_ready_for_input RETURNING VALUE(state) TYPE i,
       is_alive RETURNING VALUE(state) TYPE i,
@@ -213,7 +228,8 @@ CLASS cl_gui_alv_grid DEFINITION PUBLIC.
           control TYPE REF TO cl_gui_control,
       set_drop_down_table
         IMPORTING
-          it_drop_down_alias TYPE any,
+          it_drop_down       TYPE any OPTIONAL
+          it_drop_down_alias TYPE any OPTIONAL,
       get_selected_cells
         EXPORTING
           et_cell TYPE any,
@@ -247,12 +263,6 @@ CLASS cl_gui_alv_grid DEFINITION PUBLIC.
       register_f4_for_fields
         IMPORTING
           data TYPE any,
-      get_current_cell
-        EXPORTING
-          e_row TYPE i
-          e_col TYPE i
-          es_row_no TYPE ty_row_no
-          e_value TYPE any,
       get_filtered_entries
         EXPORTING
           et_filtered_entries TYPE lvc_t_fidx,
@@ -278,10 +288,27 @@ CLASS cl_gui_alv_grid DEFINITION PUBLIC.
           i_save               TYPE string OPTIONAL
           is_layout            TYPE string OPTIONAL
           it_toolbar_excluding TYPE string OPTIONAL
+          it_hyperlink         TYPE any OPTIONAL
+          i_default            TYPE abap_bool DEFAULT abap_true
         CHANGING
           it_fieldcatalog      TYPE ANY TABLE OPTIONAL
           it_sort              TYPE ANY TABLE OPTIONAL
           it_outtab            TYPE ANY TABLE OPTIONAL.
+
+    METHODS get_current_cell
+      EXPORTING
+        e_row     TYPE i
+        e_value   TYPE c
+        e_col     TYPE i
+        es_row_id TYPE lvc_s_row
+        es_col_id TYPE lvc_s_col
+        es_row_no TYPE lvc_s_roid.
+
+    METHODS set_current_cell_via_id
+      IMPORTING
+        is_row_id    TYPE lvc_s_row OPTIONAL
+        is_column_id TYPE lvc_s_col OPTIONAL
+        is_row_no    TYPE lvc_s_roid OPTIONAL.
 
   PROTECTED SECTION.
     DATA mt_outtab TYPE REF TO data.
@@ -291,6 +318,10 @@ ENDCLASS.
 CLASS cl_gui_alv_grid IMPLEMENTATION.
 
   METHOD constructor.
+    RETURN.
+  ENDMETHOD.
+
+  METHOD set_current_cell_via_id.
     RETURN.
   ENDMETHOD.
 
